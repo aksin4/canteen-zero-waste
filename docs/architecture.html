@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Canteen Food Waste System: Architecture</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --card: #ffffff;
+    --line: rgba(29,29,27,.14); --accent: #2f7d55; --accent-soft: rgba(47,125,85,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161615; --fg: #ecebe6; --muted: #a09f99; --card: #1f1f1d;
+      --line: rgba(236,235,230,.16); --accent: #62c08e; --accent-soft: rgba(98,192,142,.10);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 40px 24px 64px; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -.01em; }
+  .lede { color: var(--muted); margin: 0 0 32px; max-width: 760px; }
+  h2 { font-size: 18px; margin: 48px 0 14px; }
+  figure { margin: 0; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 20px; overflow-x: auto; }
+  figure svg { display: block; width: 100%; min-width: 860px; height: auto; color: var(--fg); }
+  figcaption { color: var(--muted); font-size: 14px; margin-top: 12px; }
+  svg .box { fill: var(--card); stroke: currentColor; stroke-opacity: .35; stroke-width: 1.2; }
+  svg .ai { fill: var(--accent-soft); stroke: var(--accent); stroke-opacity: 1; }
+  svg .t { font-size: 13.5px; font-weight: 600; fill: currentColor; }
+  svg .s { font-size: 11.5px; fill: currentColor; opacity: .68; }
+  svg .h { font-size: 12px; font-weight: 700; fill: currentColor; opacity: .55; letter-spacing: .06em; }
+  svg .lbl { font-size: 11px; fill: currentColor; opacity: .6; }
+  svg .wire { stroke: currentColor; stroke-opacity: .55; stroke-width: 1.4; fill: none; }
+  svg .fb { stroke: var(--accent); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+  svg .fbl { font-size: 11.5px; fill: var(--accent); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .step h3 { margin: 0 0 6px; font-size: 15px; }
+  .step p { margin: 0; font-size: 14.5px; color: var(--muted); }
+  .stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; font-size: 14.5px; }
+  .stack div { border-top: 1px solid var(--line); padding-top: 10px; }
+  .stack b { display: block; font-size: 13px; color: var(--muted); font-weight: 600; }
+  @media (max-width: 760px) { .steps, .stack { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Smart Canteen Food Waste System</h1>
+  <p class="lede">IoT devices measure what gets cooked, served and thrown away. AI models use that data to tell the kitchen how much to cook the next day, and any surplus goes to students at a discount or to a local NGO.</p>
+
+  <figure>
+    <svg viewBox="0 0 1200 610" role="img" aria-label="System architecture: IoT sensors, the student app and canteen records feed an edge device and app backend, which send data to cloud storage. Four AI models process it and produce a kitchen dashboard, student alerts, NGO pickup notices and weekly reports. Daily waste data feeds back into the models.">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" fill-opacity=".7"/>
+        </marker>
+        <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3f9e6c"/>
+        </marker>
+      </defs>
+
+      <!-- column headers -->
+      <text class="h" x="120" y="55" text-anchor="middle">1 · DATA SOURCES</text>
+      <text class="h" x="355" y="55" text-anchor="middle">2 · EDGE / API</text>
+      <text class="h" x="585" y="55" text-anchor="middle">3 · CLOUD</text>
+      <text class="h" x="835" y="55" text-anchor="middle">4 · AI LAYER</text>
+      <text class="h" x="1085" y="55" text-anchor="middle">5 · OUTPUTS</text>
+
+      <!-- column 1: sources -->
+      <rect class="box" x="20" y="80" width="200" height="90" rx="10"/>
+      <text class="t" x="120" y="118" text-anchor="middle">Smart bins</text>
+      <text class="s" x="120" y="138" text-anchor="middle">load cell + camera</text>
+
+      <rect class="box" x="20" y="200" width="200" height="90" rx="10"/>
+      <text class="t" x="120" y="238" text-anchor="middle">Counter scales</text>
+      <text class="s" x="120" y="258" text-anchor="middle">+ storage temp/humidity</text>
+
+      <rect class="box" x="20" y="320" width="200" height="90" rx="10"/>
+      <text class="t" x="120" y="358" text-anchor="middle">Student app</text>
+      <text class="s" x="120" y="378" text-anchor="middle">bookings, ratings, check-ins</text>
+
+      <rect class="box" x="20" y="440" width="200" height="90" rx="10"/>
+      <text class="t" x="120" y="478" text-anchor="middle">Canteen + external</text>
+      <text class="s" x="120" y="498" text-anchor="middle">menu, sales, calendar, weather</text>
+
+      <line class="wire" x1="220" y1="125" x2="268" y2="125" marker-end="url(#arrow)"/>
+      <line class="wire" x1="220" y1="245" x2="268" y2="245" marker-end="url(#arrow)"/>
+      <line class="wire" x1="220" y1="365" x2="268" y2="365" marker-end="url(#arrow)"/>
+      <line class="wire" x1="220" y1="485" x2="268" y2="485" marker-end="url(#arrow)"/>
+
+      <!-- column 2: edge + api -->
+      <rect class="box" x="270" y="80" width="170" height="210" rx="10"/>
+      <text class="t" x="355" y="165" text-anchor="middle">Edge device</text>
+      <text class="s" x="355" y="185" text-anchor="middle">ESP32 / Raspberry Pi</text>
+      <text class="s" x="355" y="203" text-anchor="middle">MQTT over Wi-Fi</text>
+
+      <rect class="box" x="270" y="320" width="170" height="210" rx="10"/>
+      <text class="t" x="355" y="405" text-anchor="middle">App backend</text>
+      <text class="s" x="355" y="425" text-anchor="middle">FastAPI (REST)</text>
+      <text class="s" x="355" y="443" text-anchor="middle">college email login</text>
+
+      <line class="wire" x1="440" y1="125" x2="488" y2="125" marker-end="url(#arrow)"/>
+      <line class="wire" x1="440" y1="425" x2="488" y2="425" marker-end="url(#arrow)"/>
+
+      <!-- column 3: cloud -->
+      <rect class="box" x="490" y="80" width="190" height="90" rx="10"/>
+      <text class="t" x="585" y="118" text-anchor="middle">IoT ingestion</text>
+      <text class="s" x="585" y="138" text-anchor="middle">AWS IoT Core</text>
+
+      <rect class="box" x="490" y="200" width="190" height="90" rx="10"/>
+      <text class="t" x="585" y="238" text-anchor="middle">Cleaning &amp; ETL</text>
+      <text class="s" x="585" y="258" text-anchor="middle">scheduled jobs</text>
+
+      <rect class="box" x="490" y="320" width="190" height="210" rx="10"/>
+      <text class="t" x="585" y="405" text-anchor="middle">Data store</text>
+      <text class="s" x="585" y="425" text-anchor="middle">PostgreSQL</text>
+      <text class="s" x="585" y="443" text-anchor="middle">+ image storage</text>
+
+      <line class="wire" x1="585" y1="170" x2="585" y2="198" marker-end="url(#arrow)"/>
+      <line class="wire" x1="585" y1="290" x2="585" y2="318" marker-end="url(#arrow)"/>
+
+      <!-- bus to AI -->
+      <line class="wire" x1="680" y1="425" x2="705" y2="425"/>
+      <line class="wire" x1="705" y1="125" x2="705" y2="485"/>
+      <line class="wire" x1="705" y1="125" x2="728" y2="125" marker-end="url(#arrow)"/>
+      <line class="wire" x1="705" y1="245" x2="728" y2="245" marker-end="url(#arrow)"/>
+      <line class="wire" x1="705" y1="365" x2="728" y2="365" marker-end="url(#arrow)"/>
+      <line class="wire" x1="705" y1="485" x2="728" y2="485" marker-end="url(#arrow)"/>
+
+      <!-- column 4: AI -->
+      <rect class="box ai" x="730" y="80" width="210" height="90" rx="10"/>
+      <text class="t" x="835" y="118" text-anchor="middle">Computer vision</text>
+      <text class="s" x="835" y="138" text-anchor="middle">YOLO: which dishes get wasted</text>
+
+      <rect class="box ai" x="730" y="200" width="210" height="90" rx="10"/>
+      <text class="t" x="835" y="238" text-anchor="middle">Demand forecasting</text>
+      <text class="s" x="835" y="258" text-anchor="middle">XGBoost / LSTM: next-day qty</text>
+
+      <rect class="box ai" x="730" y="320" width="210" height="90" rx="10"/>
+      <text class="t" x="835" y="358" text-anchor="middle">Anomaly detection</text>
+      <text class="s" x="835" y="378" text-anchor="middle">flags high-waste days</text>
+
+      <rect class="box ai" x="730" y="440" width="210" height="90" rx="10"/>
+      <text class="t" x="835" y="478" text-anchor="middle">Recommendations</text>
+      <text class="s" x="835" y="498" text-anchor="middle">menu &amp; portion changes</text>
+
+      <!-- bus to outputs -->
+      <line class="wire" x1="940" y1="125" x2="965" y2="125"/>
+      <line class="wire" x1="940" y1="245" x2="965" y2="245"/>
+      <line class="wire" x1="940" y1="365" x2="965" y2="365"/>
+      <line class="wire" x1="940" y1="485" x2="965" y2="485"/>
+      <line class="wire" x1="965" y1="125" x2="965" y2="485"/>
+      <line class="wire" x1="965" y1="125" x2="988" y2="125" marker-end="url(#arrow)"/>
+      <line class="wire" x1="965" y1="245" x2="988" y2="245" marker-end="url(#arrow)"/>
+      <line class="wire" x1="965" y1="365" x2="988" y2="365" marker-end="url(#arrow)"/>
+      <line class="wire" x1="965" y1="485" x2="988" y2="485" marker-end="url(#arrow)"/>
+
+      <!-- column 5: outputs -->
+      <rect class="box" x="990" y="80" width="190" height="90" rx="10"/>
+      <text class="t" x="1085" y="118" text-anchor="middle">Kitchen dashboard</text>
+      <text class="s" x="1085" y="138" text-anchor="middle">how much to cook today</text>
+
+      <rect class="box" x="990" y="200" width="190" height="90" rx="10"/>
+      <text class="t" x="1085" y="238" text-anchor="middle">Student alerts</text>
+      <text class="s" x="1085" y="258" text-anchor="middle">discounted surplus (FCM)</text>
+
+      <rect class="box" x="990" y="320" width="190" height="90" rx="10"/>
+      <text class="t" x="1085" y="358" text-anchor="middle">NGO pickup</text>
+      <text class="s" x="1085" y="378" text-anchor="middle">leftover food collected</text>
+
+      <rect class="box" x="990" y="440" width="190" height="90" rx="10"/>
+      <text class="t" x="1085" y="478" text-anchor="middle">Weekly reports</text>
+      <text class="s" x="1085" y="498" text-anchor="middle">waste trends by dish</text>
+
+      <!-- feedback loop -->
+      <path class="fb" d="M1085 530 V572 H120 V533" marker-end="url(#arrowG)"/>
+      <text class="fbl" x="600" y="594" text-anchor="middle">Feedback loop: each day's actual waste and sales are logged again and the models retrain weekly</text>
+    </svg>
+    <figcaption>Data flows left to right from sensors and the app, through the cloud and AI models, to the kitchen, students and NGOs. Each day's results flow back as new training data.</figcaption>
+  </figure>
+
+  <h2>Workflow</h2>
+  <div class="steps">
+    <div class="step">
+      <h3>Input</h3>
+      <p>Smart bins weigh and photograph discarded food, counter scales record servings, and storage sensors track temperature. The canteen logs what it cooked and sold. Students pre-book and rate meals, and the system pulls in the academic calendar and weather.</p>
+    </div>
+    <div class="step">
+      <h3>Processing</h3>
+      <p>Edge devices send readings over MQTT to the cloud, where the data is cleaned and stored. Computer vision identifies wasted dishes, the forecasting model predicts next-day demand per dish, and anomaly detection flags days with unusually high waste.</p>
+    </div>
+    <div class="step">
+      <h3>Output</h3>
+      <p>The kitchen sees how much to cook each morning. Near closing, students get alerts about discounted portions, and an NGO is notified to collect what's left. Weekly reports show which dishes are wasted most so the menu can change.</p>
+    </div>
+  </div>
+
+  <h2>Technology</h2>
+  <div class="stack">
+    <div><b>IoT hardware</b>Load-cell smart bins, bin camera, counter scales, DHT22 sensors, ESP32 / Raspberry Pi</div>
+    <div><b>Connectivity</b>MQTT over Wi-Fi, AWS IoT Core</div>
+    <div><b>AI / ML</b>YOLO for food recognition, XGBoost / LSTM for forecasting, Isolation Forest for anomalies</div>
+    <div><b>Backend &amp; data</b>FastAPI, PostgreSQL, cloud object storage for images</div>
+    <div><b>Apps</b>Flutter student app, React kitchen dashboard</div>
+    <div><b>Notifications</b>Firebase Cloud Messaging for students and NGO partners</div>
+  </div>
+</main>
+</body>
+</html>
