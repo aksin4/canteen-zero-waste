@@ -15,6 +15,8 @@
   --warn: #a95c06; --warn-soft: #fcefd9; --bad: #b42318; --bad-soft: #fde6e3; --good: #17784c;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --head: #0b5c4b; --head-ink: #ffffff; --sun: #f4b400;
+  --c1: #12a37f; --c2: #f07b2a; --c3: #e2445c; --c4: #4f6bed; --c5: #d9a400; --c6: #8a4fd8;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -22,6 +24,8 @@
     --bg: #0f1513; --surface: #172019; --ink: #e4ebe7; --muted: #98a7a1; --line: #29342f;
     --accent: #4fc4a3; --accent-soft: #15302a;
     --warn: #f1a849; --warn-soft: #33260f; --bad: #f2776c; --bad-soft: #3a1b18; --good: #55c98f;
+    --head: #0c3b31; --head-ink: #eafaf4; --sun: #ffc93c;
+    --c1: #2fd0a4; --c2: #ff9a52; --c3: #ff6b81; --c4: #7d93ff; --c5: #ffd23f; --c6: #b385f5;
     color-scheme: dark;
   }
 }
@@ -29,21 +33,25 @@
   --bg: #0f1513; --surface: #172019; --ink: #e4ebe7; --muted: #98a7a1; --line: #29342f;
   --accent: #4fc4a3; --accent-soft: #15302a;
   --warn: #f1a849; --warn-soft: #33260f; --bad: #f2776c; --bad-soft: #3a1b18; --good: #55c98f;
+  --head: #0c3b31; --head-ink: #eafaf4; --sun: #ffc93c;
+  --c1: #2fd0a4; --c2: #ff9a52; --c3: #ff6b81; --c4: #7d93ff; --c5: #ffd23f; --c6: #b385f5;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--font-body); }
+html, body { margin: 0; background: var(--bg); background-image: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c1) 8%, transparent), transparent 40%), radial-gradient(circle at 0 100%, color-mix(in srgb, var(--c2) 7%, transparent), transparent 45%); background-attachment: fixed; color: var(--ink); font: 15px/1.5 var(--font-body); }
 .num, td.n, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-header.top { background: var(--surface); border-bottom: 1px solid var(--line); }
-.top-inner { max-width: 1200px; margin: 0 auto; padding: 14px 20px 0; }
+header.top { background: var(--head); color: var(--head-ink); border-bottom: 4px solid var(--sun); }
+.top-inner { max-width: 1200px; margin: 0 auto; padding: 16px 20px 12px; }
 .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.brand h1 { font-size: 19px; margin: 0; letter-spacing: -.01em; }
-.brand span { color: var(--muted); font-size: 13px; }
-nav.tabs { display: flex; gap: 4px; margin-top: 12px; overflow-x: auto; }
-nav.tabs a { padding: 10px 14px; color: var(--muted); text-decoration: none; font-weight: 500;
-  border-bottom: 2px solid transparent; white-space: nowrap; }
-nav.tabs a:hover { color: var(--ink); }
-nav.tabs a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+.brand h1 { font-size: 20px; margin: 0; letter-spacing: -.01em; }
+.brand h1 em { font-style: normal; color: var(--sun); }
+.brand span { opacity: .8; font-size: 13px; }
+nav.tabs { display: flex; gap: 6px; margin-top: 14px; overflow-x: auto; }
+nav.tabs a { padding: 7px 14px; color: var(--head-ink); text-decoration: none; font-weight: 500;
+  border-radius: 999px; white-space: nowrap; background: rgba(255,255,255,.08); }
+nav.tabs a:hover { background: rgba(255,255,255,.18); }
+nav.tabs a[aria-current="page"] { background: var(--sun); color: #2a2000; }
+nav.tabs a:focus-visible { outline-color: var(--sun); }
 main { max-width: 1200px; margin: 0 auto; padding: 24px 20px 64px; }
 .view { display: none; }
 .view.on { display: block; }
@@ -59,17 +67,25 @@ input[type="number"] { width: 72px; font-family: var(--font-mono); }
 input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
 button { font: inherit; font-weight: 600; border-radius: 8px; padding: 8px 14px; cursor: pointer;
   border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
-button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+button.primary { background: var(--c1); border-color: var(--c1); color: #fff; }
 button:disabled { opacity: .5; cursor: default; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.tile { --tc: var(--c1); background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--tc);
+  border-radius: 10px; padding: 12px 16px 14px;
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--tc) 9%, transparent), transparent 70%); }
+.tiles .tile:nth-child(4n+1) { --tc: var(--c1); }
+.tiles .tile:nth-child(4n+2) { --tc: var(--c2); }
+.tiles .tile:nth-child(4n+3) { --tc: var(--c4); }
+.tiles .tile:nth-child(4n+4) { --tc: var(--c3); }
 .tile b { display: block; font-size: 12.5px; color: var(--muted); font-weight: 500; }
-.tile .num { font-size: 26px; font-weight: 600; line-height: 1.25; display: block; margin-top: 2px; }
+.tile .num { font-size: 26px; font-weight: 600; line-height: 1.25; display: block; margin-top: 2px; color: var(--tc); }
 .tile small { color: var(--muted); font-size: 12.5px; }
-.tile.hl { border-color: var(--accent); background: var(--accent-soft); }
+.tile.hl { box-shadow: 0 0 0 2px var(--tc) inset; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
-.panel h3 { margin: 0 0 10px; font-size: 15px; }
+.panel h3 { margin: 0 0 10px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.panel h3::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--sun); flex: none; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 0; flex: none; }
 .scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12.5px; padding: 6px 10px; border-bottom: 1px solid var(--line); }
@@ -87,14 +103,14 @@ th.n, td.n { text-align: right; }
 .dish:last-child { border-bottom: 0; }
 .dish .row { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
 .bar { height: 8px; background: var(--bg); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid var(--line); }
-.bar i { display: block; height: 100%; background: var(--accent); }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
 .big { font-size: 32px; font-weight: 600; }
 .sensor + .sensor { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
 .sensor .lbl { font-size: 12.5px; color: var(--muted); display: flex; justify-content: space-between; }
 .log { list-style: none; margin: 8px 0 0; padding: 0; font-size: 12.5px; font-family: var(--font-mono); max-height: 170px; overflow: auto; }
 .log li { padding: 3px 0; color: var(--muted); }
 .feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.feed li { border-left: 3px solid var(--accent); background: var(--bg); padding: 8px 10px; border-radius: 0 6px 6px 0; font-size: 13.5px; }
+.feed li { border-left: 3px solid var(--c1); background: var(--bg); padding: 8px 10px; border-radius: 0 6px 6px 0; font-size: 13.5px; }
 .feed li.warn { border-left-color: var(--warn); }
 .feed li.bad { border-left-color: var(--bad); }
 .feed li .t { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: block; }
@@ -102,7 +118,7 @@ th.n, td.n { text-align: right; }
 .clock { font-family: var(--font-mono); font-size: 14px; padding: 6px 10px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); }
 .phone-wrap { display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: start; }
 .phone { width: 100%; max-width: 360px; border: 10px solid var(--ink); border-radius: 36px; background: var(--bg); overflow: hidden; }
-.phone .bar-top { background: var(--accent); color: var(--surface); padding: 18px 16px 14px; }
+.phone .bar-top { background: linear-gradient(135deg, var(--head), var(--c1)); color: #fff; border-bottom: 3px solid var(--sun); padding: 18px 16px 14px; }
 .phone .bar-top b { font-size: 17px; display: block; }
 .phone .bar-top small { opacity: .85; }
 .phone .body { padding: 12px; display: grid; gap: 12px; max-height: 560px; overflow: auto; }
@@ -111,13 +127,13 @@ th.n, td.n { text-align: right; }
 .menu-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
 .menu-item:last-child { border-bottom: 0; }
 .menu-item button { padding: 5px 10px; font-size: 13px; }
-.menu-item button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.menu-item button[aria-pressed="true"] { background: var(--c1); border-color: var(--c1); color: #fff; }
 .stars { display: flex; gap: 6px; margin-top: 8px; }
 .stars button { padding: 5px 0; width: 38px; font-size: 13px; }
 svg.chart { width: 100%; height: auto; display: block; }
 svg.chart .grid { stroke: var(--line); stroke-width: 1; }
 svg.chart .ax { fill: var(--muted); font: 11px var(--font-mono); }
-svg.chart .s-old { stroke: var(--muted); }
+svg.chart .s-old { stroke: var(--c2); }
 svg.chart .s-new { stroke: var(--accent); }
 svg.chart .f-left { fill: var(--warn); }
 svg.chart .f-plate { fill: var(--muted); opacity: .55; }
@@ -142,7 +158,7 @@ svg.spark .ar.hot { fill: var(--bad); }
 <header class="top">
   <div class="top-inner">
     <div class="brand">
-      <h1>Canteen Zero Waste</h1>
+      <h1>Canteen <em>Zero Waste</em></h1>
       <span>Working prototype. Sensor readings and 8 weeks of canteen history are simulated in your browser.</span>
     </div>
     <nav class="tabs" aria-label="Views">
@@ -288,7 +304,7 @@ svg.spark .ar.hot { fill: var(--bad); }
       <div class="panel">
         <h3>Food wasted per day (kg)</h3>
         <div class="legend">
-          <span><i style="background:var(--muted)"></i>Usual fixed batch</span>
+          <span><i style="background:var(--c2)"></i>Usual fixed batch</span>
           <span><i style="background:var(--accent)"></i>With AI forecast (weeks 5 to 8, test)</span>
         </div>
         <div id="r-line"></div>
@@ -296,7 +312,7 @@ svg.spark .ar.hot { fill: var(--bad); }
       <div class="panel">
         <h3>Where the waste comes from (8 weeks, kg)</h3>
         <div class="legend">
-          <span><i style="background:var(--warn)"></i>Unsold at counter</span>
+          <span><i style="background:linear-gradient(90deg,var(--c1),var(--c2),var(--c5),var(--c4),var(--c3),var(--c6))"></i>Unsold at counter (dish colour)</span>
           <span><i style="background:var(--muted);opacity:.55"></i>Left on plates</span>
         </div>
         <div id="r-bars"></div>
@@ -340,12 +356,12 @@ svg.spark .ar.hot { fill: var(--bad); }
   /* ---------- canteen setup ---------- */
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const DISHES = [
-    { id: "pulao",   name: "Veg Pulao",            base: 170, kg: 0.25, plate: 0.07, rain: 0.90 },
-    { id: "chapati", name: "Chapati + Dal",        base: 210, kg: 0.22, plate: 0.05, rain: 0.95 },
-    { id: "dosa",    name: "Masala Dosa",          base: 150, kg: 0.20, plate: 0.04, rain: 1.15 },
-    { id: "curd",    name: "Curd Rice",            base: 115, kg: 0.25, plate: 0.06, rain: 0.78 },
-    { id: "paneer",  name: "Paneer Butter Masala", base: 100, kg: 0.18, plate: 0.09, rain: 1.00 },
-    { id: "lemon",   name: "Lemon Rice",           base: 85,  kg: 0.22, plate: 0.13, rain: 0.90 }
+    { id: "pulao",   col: "var(--c1)", name: "Veg Pulao",            base: 170, kg: 0.25, plate: 0.07, rain: 0.90 },
+    { id: "chapati", col: "var(--c2)", name: "Chapati + Dal",        base: 210, kg: 0.22, plate: 0.05, rain: 0.95 },
+    { id: "dosa",    col: "var(--c5)", name: "Masala Dosa",          base: 150, kg: 0.20, plate: 0.04, rain: 1.15 },
+    { id: "curd",    col: "var(--c4)", name: "Curd Rice",            base: 115, kg: 0.25, plate: 0.06, rain: 0.78 },
+    { id: "paneer",  col: "var(--c3)", name: "Paneer Butter Masala", base: 100, kg: 0.18, plate: 0.09, rain: 1.00 },
+    { id: "lemon",   col: "var(--c6)", name: "Lemon Rice",           base: 85,  kg: 0.22, plate: 0.13, rain: 0.90 }
   ];
   const DOW = [1.05, 1.0, 1.02, 0.96, 0.86, 0.55];
   const FIXED = d => Math.round(d.base * 1.12);
@@ -486,7 +502,7 @@ svg.spark .ar.hot { fill: var(--bad); }
       fTot += r.f; cookKg += r.cook * r.d.kg; fixedKg += r.fixed * r.d.kg;
       const diff = r.cook - r.fixed;
       const pill = diff < -10 ? `<span class="pill good">${diff}</span>` : diff > 10 ? `<span class="pill warn">+${diff}</span>` : `<span class="pill">${diff > 0 ? "+" : ""}${diff}</span>`;
-      return `<tr><td>${esc(r.d.name)}</td>
+      return `<tr><td><span class="dot" style="background:${r.d.col}"></span>${esc(r.d.name)}</td>
         <td class="n"><input type="number" min="0" max="400" id="pb-${r.d.id}" data-id="${r.d.id}" value="${r.pb}" aria-label="Pre-booked for ${esc(r.d.name)}"></td>
         <td class="n">${Math.round(r.f)}</td>
         <td class="n"><b>${r.cook}</b> <span style="color:var(--muted)">(${fmt1(r.cook * r.d.kg)} kg)</span></td>
@@ -617,7 +633,7 @@ svg.spark .ar.hot { fill: var(--bad); }
     const s = sim;
     if (!s) {
       const rows = planRows();
-      $("l-dishes").innerHTML = rows.map(r => `<div class="dish"><div class="row"><span>${esc(r.d.name)}</span><span class="num">0 / ${$("l-mode").value === "ai" ? r.cook : r.fixed}</span></div><div class="bar"><i style="width:0"></i></div></div>`).join("");
+      $("l-dishes").innerHTML = rows.map(r => `<div class="dish"><div class="row"><span><span class="dot" style="background:${r.d.col}"></span>${esc(r.d.name)}</span><span class="num">0 / ${$("l-mode").value === "ai" ? r.cook : r.fixed}</span></div><div class="bar"><i style="width:0;background:${r.d.col}"></i></div></div>`).join("");
       $("l-binspark").innerHTML = spark([0], ""); $("l-tempspark").innerHTML = spark([4], "", 9);
       return;
     }
@@ -625,7 +641,7 @@ svg.spark .ar.hot { fill: var(--bad); }
     $("l-dishes").innerHTML = s.dishes.map(x => {
       const left = x.cooked - x.served, pct = x.cooked ? x.served / x.cooked * 100 : 0;
       const tag = x.discount ? ` <span class="pill warn">30% off</span>` : (left === 0 ? ` <span class="pill bad">sold out</span>` : "");
-      return `<div class="dish"><div class="row"><span>${esc(x.d.name)}${tag}</span><span class="num">${x.served} / ${x.cooked}</span></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div></div>`;
+      return `<div class="dish"><div class="row"><span><span class="dot" style="background:${x.d.col}"></span>${esc(x.d.name)}${tag}</span><span class="num">${x.served} / ${x.cooked}</span></div><div class="bar"><i style="width:${pct.toFixed(1)}%;background:${x.d.col}"></i></div></div>`;
     }).join("");
     $("l-bin").textContent = `${fmt1(s.bin)} kg`;
     $("l-binstat").innerHTML = s.flagged.bin ? `<span class="pill bad">anomaly</span>` : `<span class="pill good">normal</span>`;
@@ -678,7 +694,7 @@ svg.spark .ar.hot { fill: var(--bad); }
     $("s-day").textContent = `Tomorrow: ${DAYS[state.plan.dow]} lunch`;
     $("s-menu").innerHTML = DISHES.map(d => {
       const on = state.mine.has(d.id);
-      return `<div class="menu-item"><span>${esc(d.name)}<br><small style="color:var(--muted)">${prebookOf(d)} pre-booked</small></span>
+      return `<div class="menu-item"><span><span class="dot" style="background:${d.col}"></span>${esc(d.name)}<br><small style="color:var(--muted)">${prebookOf(d)} pre-booked</small></span>
         <button data-id="${d.id}" aria-pressed="${on}">${on ? "Booked" : "Pre-book"}</button></div>`;
     }).join("");
     $("s-notes").innerHTML = state.notes.length
@@ -706,6 +722,7 @@ svg.spark .ar.hot { fill: var(--bad); }
     g += `<line class="grid" x1="${x(24) - 4}" x2="${x(24) - 4}" y1="${pt}" y2="${H - pb}" stroke-dasharray="3 3"/>`;
     const path = (vals, cls) => { let d = "", pen = false; vals.forEach((v, i) => { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1); pen = true; }); return `<path class="${cls}" d="${d}" fill="none" stroke-width="2"/>`; };
     g += path(oldDaily, "s-old") + path(newDaily, "s-new");
+    g = g.replace(/class="s-new"([^>]*)stroke-width="2"/, 'class="s-new"$1stroke-width="3"');
     $("r-line").innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily food waste over 8 weeks. In the test weeks the AI forecast line sits well below the usual fixed batch line.">${g}</svg>`;
 
     /* per-dish totals */
@@ -722,14 +739,14 @@ svg.spark .ar.hot { fill: var(--bad); }
     per.forEach((p, i) => {
       const yy = i * rowH + 6, sc = (BW - lw - 10) / bmax;
       b += `<text class="lab" x="${lw - 8}" y="${yy + 15}" text-anchor="end">${esc(p.d.name)}</text>
-        <rect class="f-left" x="${lw}" y="${yy}" width="${(p.left * sc).toFixed(1)}" height="20" rx="3"/>
+        <rect class="f-left" style="fill:${p.d.col}" x="${lw}" y="${yy}" width="${(p.left * sc).toFixed(1)}" height="20" rx="3"/>
         <rect class="f-plate" x="${(lw + p.left * sc).toFixed(1)}" y="${yy}" width="${(p.plate * sc).toFixed(1)}" height="20" rx="3"/>`;
     });
     $("r-bars").innerHTML = `<svg class="chart" viewBox="0 0 ${BW} ${BH}" role="img" aria-label="Waste by dish, split into unsold food and plate waste.">${b}</svg>`;
 
     $("r-rows").innerHTML = per.map(p => {
       const st = p.leftPct > 20 ? `<span class="pill bad">overcooked</span>` : p.platePct > 10 ? `<span class="pill warn">portion too big</span>` : `<span class="pill good">ok</span>`;
-      return `<tr><td>${esc(p.d.name)}</td><td class="n">${Math.round(p.cooked)} kg</td><td class="n">${p.leftPct.toFixed(0)}%</td><td class="n">${p.platePct.toFixed(0)}%</td><td class="n">${p.rating ? p.rating.toFixed(1) + "★" : "–"}</td><td>${st}</td></tr>`;
+      return `<tr><td><span class="dot" style="background:${p.d.col}"></span>${esc(p.d.name)}</td><td class="n">${Math.round(p.cooked)} kg</td><td class="n">${p.leftPct.toFixed(0)}%</td><td class="n">${p.platePct.toFixed(0)}%</td><td class="n">${p.rating ? p.rating.toFixed(1) + "★" : "–"}</td><td>${st}</td></tr>`;
     }).join("");
 
     /* recommendations */
